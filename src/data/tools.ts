@@ -408,7 +408,7 @@ export const tools: Tool[] = [
     pricing: 'Paid (~$30/mo personal)',
     shortDesc: 'Generate videos with AI avatars speaking your script',
     prompts: {
-      prompt1: `Produce a 1-minute onboarding video with an AI avatar introducing our company\\'s mission.',
+      prompt1: `Produce a 1-minute onboarding video with an AI avatar introducing our company's mission.`,
       prompt2: 'Create a video tutorial with an AI avatar explaining how to use our software.',
       prompt3: 'Generate a video ad with an AI presenter showcasing the benefits of our service.',
     },
