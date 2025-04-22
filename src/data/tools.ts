@@ -435,7 +435,8 @@ export const tools: Tool[] = [
     pricing: 'Freemium preview, paid from ~$20 for files',
     shortDesc: 'AI-based logo maker with brand kits & color palettes',
     prompts: {
-      prompt1: 'Generate a simple logo for \\'Sunrise Bakery\\' using a warm color palette and a sunrise icon.',
+      // In your “Looka” entry around line 438:
+      prompt1: 'Generate a simple logo for \'Sunrise Bakery\' using a warm color palette and a sunrise icon.',
       prompt2: 'Create a logo for a tech startup with a minimalist design and bold typography.',
       prompt3: 'Design a logo for a fitness brand that incorporates a kettlebell symbol.',
     },
