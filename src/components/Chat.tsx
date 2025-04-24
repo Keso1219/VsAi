@@ -44,7 +44,7 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
 
     try {
       const response = await fetch(
-        'https://kevins.app.n8n.cloud/webhook-test/c3f914a9-7b34-4d17-ba3f-adca29c7c473',
+        'https://kevins.app.n8n.cloud/webhook-test/d2c8c122-0c6d-4df0-803c-8b572199c8c2',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
