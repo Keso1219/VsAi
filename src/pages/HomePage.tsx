@@ -1,6 +1,6 @@
 // src/pages/HomePage.tsx
 import React from 'react';
-import Chat from '../components/Chat'
+import Chat from '../components/Chat';
 import { Link } from 'react-router-dom';
 import { categories } from '../data/categories';
 import CategoryCard from '../components/CategoryCard';
