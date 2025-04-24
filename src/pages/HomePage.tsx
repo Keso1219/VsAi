@@ -1,18 +1,6 @@
-import Chat from '@/components/Chat'
-
-export default function HomePage() {
-  return (
-    <main className="min-h-screen bg-gray-900 text-white p-8">
-      {/* …your hero/intro… */}
-      <section className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">🗨️ Find Your AI Tool</h2>
-        <Chat />
-      </section>
-      {/* …rest of page… */}
-    </main>
-  )
-}
+// src/pages/HomePage.tsx
 import React from 'react';
+import Chat from '@/components/Chat';
 import { Link } from 'react-router-dom';
 import { categories } from '../data/categories';
 import CategoryCard from '../components/CategoryCard';
@@ -20,17 +8,24 @@ import HeroSection from '../components/HeroSection';
 import HowItWorks from '../components/HowItWorks';
 import { ArrowRight } from 'lucide-react';
 
-const HomePage: React.FC = () => {
-  // Get featured categories or first 4 if none are marked as featured
-  const featuredCategories = categories.filter(cat => cat.featured).length > 0 
+export default function HomePage() {
+  // Determine featured categories: those marked featured, else first 4
+  const featuredCategories = categories.filter(cat => cat.featured).length > 0
     ? categories.filter(cat => cat.featured)
     : categories.slice(0, 4);
 
   return (
-    <div>
+    <main className="min-h-screen bg-gray-900 text-white p-8">
+      {/* Hero Section */}
       <HeroSection />
-      
-      {/* Add Quick Start Guide */}
+
+      {/* Chat Section */}
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">🗨️ Find Your AI Tool</h2>
+        <Chat />
+      </section>
+
+      {/* Quick Start Guide */}
       <section className="py-12 bg-dark-card my-8 rounded-lg">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-6 text-center">Quick Start Guide</h2>
@@ -59,7 +54,8 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
-      
+
+      {/* Featured Categories */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between">
@@ -75,7 +71,6 @@ const HomePage: React.FC = () => {
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredCategories.map(category => (
               <CategoryCard key={category.slug} category={category} />
@@ -83,9 +78,11 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
-      
+
+      {/* How It Works */}
       <HowItWorks />
-      
+
+      {/* Call to Action */}
       <section className="py-16 text-center">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6">Ready to find your perfect AI tool?</h2>
@@ -101,8 +98,6 @@ const HomePage: React.FC = () => {
           </Link>
         </div>
       </section>
-    </div>
+    </main>
   );
-};
-
-export default HomePage;
+}
