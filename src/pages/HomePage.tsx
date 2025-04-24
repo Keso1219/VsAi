@@ -1,4 +1,3 @@
-// src/pages/index.tsx (or wherever)
 import Chat from '@/components/Chat'
 
 export default function HomePage() {
