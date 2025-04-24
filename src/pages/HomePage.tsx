@@ -1,3 +1,18 @@
+// src/pages/index.tsx (or wherever)
+import Chat from '@/components/Chat'
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-gray-900 text-white p-8">
+      {/* …your hero/intro… */}
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">🗨️ Find Your AI Tool</h2>
+        <Chat />
+      </section>
+      {/* …rest of page… */}
+    </main>
+  )
+}
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { categories } from '../data/categories';
