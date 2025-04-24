@@ -22,20 +22,15 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom on new messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  useEffect(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), [messages]);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // 1. Push the user's message
+    // User message
     const userMessage: Message = {
-      id: Date.now().toString(),
-      content: input,
-      sender: 'user',
-      timestamp: Date.now(),
+      id: Date.now().toString(), content: input, sender: 'user', timestamp: Date.now(),
     };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
@@ -44,41 +39,47 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
     try {
       console.log('Sending to webhook:', WEBHOOK_URL, { query: input, toolContext: toolName });
       const response = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: input,
-          toolContext: toolName,
-        }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: input, toolContext: toolName }),
       });
       console.log('HTTP status:', response.status);
 
-      // 2. Read raw text so we can inspect exactly what we get back
       const raw = await response.text();
       console.log('Raw webhook response text:', raw);
 
-      // 3. Parse JSON if possible
+      // Attempt JSON parse
       let data: any = {};
       try {
         data = JSON.parse(raw);
         console.log('Parsed JSON:', data);
       } catch (err) {
-        console.warn('Could not parse JSON, falling back to raw text');
+        console.warn('Could not parse JSON, using raw text');
       }
 
-      // 4. Pick the correct field (adjust these falls-backs to match your webhook shape)
-      const replyText =
-        data.response ??
-        data.reply ??
-        data.result ??
-        raw ??
-        'Sorry, I could not process your request.';
+      // Extract nested output if present
+      let replyText = '';
+      if (data && typeof data === 'object') {
+        const keys = Object.keys(data);
+        if (keys.length === 1) {
+          const nested = data[keys[0]];
+          if (nested && typeof nested.output === 'string') {
+            replyText = nested.output;
+          }
+        }
+      }
 
+      // Fallback chain
+      replyText = replyText
+        || data.response
+        || data.reply
+        || data.result
+        || raw
+        || 'Sorry, I could not process your request.';
+      replyText = replyText.trim();
+
+      // Bot message
       const botMessage: Message = {
-        id: Date.now().toString(),
-        content: replyText,
-        sender: 'bot',
-        timestamp: Date.now(),
+        id: Date.now().toString(), content: replyText, sender: 'bot', timestamp: Date.now(),
       };
       setMessages(prev => [...prev, botMessage]);
     } catch (err) {
@@ -86,8 +87,7 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
       const errorMessage: Message = {
         id: Date.now().toString(),
         content: 'Sorry, there was an error processing your request.',
-        sender: 'bot',
-        timestamp: Date.now(),
+        sender: 'bot', timestamp: Date.now(),
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -100,23 +100,14 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
       <div className="p-4 border-b border-gray-800">
         <h3 className="text-lg font-semibold">AI Assistant</h3>
       </div>
-
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map(msg => (
-          <div
-            key={msg.id}
-            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[80%] rounded-lg p-3 ${
-                msg.sender === 'user' ? 'bg-primary text-white' : 'bg-dark-bg text-white'
-              }`}
-            >
+          <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[80%] rounded-lg p-3 ${msg.sender === 'user' ? 'bg-primary text-white' : 'bg-dark-bg text-white'}`}> 
               {msg.content}
             </div>
           </div>
         ))}
-
         {isLoading && (
           <div className="flex justify-start">
             <div className="bg-dark-bg text-white rounded-lg p-3">
@@ -124,10 +115,8 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
             </div>
           </div>
         )}
-
         <div ref={messagesEndRef} />
       </div>
-
       <form onSubmit={sendMessage} className="p-4 border-t border-gray-800">
         <div className="flex gap-2">
           <input
