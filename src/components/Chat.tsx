@@ -1,3 +1,4 @@
+// src/components/Chat.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 
@@ -19,7 +20,7 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -34,43 +35,44 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
       id: Date.now().toString(),
       content: input,
       sender: 'user',
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://kevins.app.n8n.cloud/webhook-test/c3f914a9-7b34-4d17-ba3f-adca29c7c473', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: input,
-          toolContext: toolName
-        }),
-      });
+      const response = await fetch(
+        'https://kevins.app.n8n.cloud/webhook-test/c3f914a9-7b34-4d17-ba3f-adca29c7c473',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: input,
+            toolContext: toolName,
+          }),
+        }
+      );
 
       const data = await response.json();
-      
+
       const botMessage: Message = {
         id: Date.now().toString(),
         content: data.response || 'Sorry, I could not process your request.',
         sender: 'bot',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
-      setMessages(prev => [...prev, botMessage]);
-    } catch (error) {
+      setMessages((prev) => [...prev, botMessage]);
+    } catch {
       const errorMessage: Message = {
         id: Date.now().toString(),
         content: 'Sorry, there was an error processing your request.',
         sender: 'bot',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +88,9 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${
+              message.sender === 'user' ? 'justify-end' : 'justify-start'
+            }`}
           >
             <div
               className={`max-w-[80%] rounded-lg p-3 ${
@@ -132,3 +136,4 @@ const Chat: React.FC<ChatProps> = ({ toolName }) => {
 };
 
 export default Chat;
+
