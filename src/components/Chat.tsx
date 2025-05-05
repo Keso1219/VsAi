@@ -13,7 +13,7 @@ interface ChatProps {
   toolName?: string;
 }
 
-const WEBHOOK_URL = 'http://localhost:5678/webhook-test/f4534e85-d391-4fa6-80cf-863a69d884d3';
+const WEBHOOK_URL = 'http://localhost:5678/webhook/f4534e85-d391-4fa6-80cf-863a69d884d3';
 
 const Chat: React.FC<ChatProps> = ({ toolName }) => {
   const [messages, setMessages] = useState<Message[]>([]);
